@@ -1,131 +1,218 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>회원가입</title>
-<!-- jquery : bootstrap, datepicker -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>  
-
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</head>
-<body>
-	<div class="container">
-		<h2 class="text-center pt-3 pb-3">회원가입</h2>
-		<form id="signUpForm" method="post" action="/user/sign_up">
-			<div class="d-flex justify-content-center">
-				<div class="col-4">
-					<div class="my-2 font-weight-bold">아이디</div>
-					<input type="text" class="form-control" name="userId" id="userId">
-					<button type="button" id="loginIdCheckBtn" class="btn btn-warning">중복확인</button>
-						<div id="idCheckLength" class="small text-danger d-none">ID를 4자 이상 입력해주세요.</div>
-						<div id="idCheckDuplicated" class="small text-danger d-none">이미 사용중인 ID입니다.</div>
-						<div id="idCheckOk" class="small text-success d-none">사용 가능한 ID 입니다.</div>
-					<div class="my-2 font-weight-bold">비밀번호</div>
-					<input type="password" class="form-control" name="password"
-						id="password">
-					<div class="my-2 font-weight-bold">비밀번호 확인</div>
-					<input type="password" class="form-control" name="passwordCheck"
-						id="passwordCheck">
-					<div class="my-2 font-weight-bold">이메일</div>
-					<input type="text" class="form-control" name="email" id="email">
-					<div class="my-2 font-weight-bold">이름</div>
-					<input type="text" class="form-control" name="name" id="name">
-					<button type="button" id="signUpBtn" class="btn btn-danger w-100 mt-3">가입하기</button>
-					<div class="d-flex justify-content-end my-2">
-						<a href="/user/sign_in_view">로그인하기</a>
-					</div>
+<div class="container">
+	<h2 class="text-center pt-3 pb-3">회원가입</h2>
+	<form id="signUpForm" method="post" action="/user/sign_up">
+		<div class="d-flex justify-content-center">
+			<div class="col-4">
+				<div class="my-2 font-weight-bold">아이디</div>
+				<input type="text" class="form-control" name="loginId" id="loginId">
+				<button type="button" id="loginIdCheckBtn" class="btn btn-warning">중복확인</button>
+					<div id="idCheckLength" class="small text-danger d-none">ID를 4자 이상 입력해주세요.</div>
+					<div id="idCheckDuplicated" class="small text-danger d-none">이미 사용중인 ID입니다.</div>
+					<div id="idCheckOk" class="small text-success d-none">사용 가능한 ID 입니다.</div>
+				<div class="my-2 font-weight-bold">비밀번호</div>
+				<input type="password" class="form-control" name="password"
+					id="password">
+				<div class="my-2 font-weight-bold">비밀번호 확인</div>
+				<input type="password" class="form-control" name="confirmPassword"
+					id="confirmPassword">
+				<div class="my-2 font-weight-bold">이메일</div>
+				<input type="text" class="form-control" name="email" id="email">
+				<div class="my-2 font-weight-bold">이름</div>
+				<input type="text" class="form-control" name="name" id="name">
+				<button type="button" id="signUpBtn" class="btn btn-danger w-100 mt-3">가입하기</button>
+				<div class="d-flex justify-content-end my-2">
+					<a href="/user/sign_in_view">로그인하기</a>
 				</div>
 			</div>
-		</form>
-	</div>
+		</div>
+	</form>
+</div>
+
+<script>
+$(document).ready(function() {
+	// 아이디 중복 확인
+	$('#loginIdCheckBtn').on('click', function(e) {
+		// validation
+		var loginId = $('input[name=loginId]').val().trim();
+		// id가 4자 이상이 아니면 경고문구 노출하고 끝낸다.
+		if (loginId.length < 4) {
+			$('#idCheckLength').removeClass('d-none'); // 경고문구 노출
+			$('#idCheckDuplicated').addClass('d-none'); // 숨김
+			$('#idCheckOk').addClass('d-none'); // 숨김
+			return;
+		}
+		
+		// 중복여부는 DB를 조회해야 하므로 서버에 묻는다. 
+		// 화면을 이동시키지 않고 ajax 통신으로 중복여부 확인하고 동적으로 문구 노출
+		$.ajax({
+			url: "/user/is_duplicated_id",
+			data: {"loginId": loginId},
+			success: function(data) {
+				if (data.result == true) { // 중복인 경우
+					$('#idCheckDuplicated').removeClass('d-none'); // 중복 경고문구 노출
+					$('#idCheckLength').addClass('d-none'); // 숨김
+					$('#idCheckOk').addClass('d-none'); // 숨김
+				} else {
+					$('#idCheckOk').removeClass('d-none'); // 사용가능 문구 노출
+					$('#idCheckLength').addClass('d-none'); // 숨김
+					$('#idCheckDuplicated').addClass('d-none'); // 숨김
+				}
+			},
+			error: function(error) {
+				alert("아이디 중복확인에 실패했습니다. 관리자에게 문의해주세요.");
+			}
+		});
+	});
 	
-	<script>
-		$(document).ready(function() {
-			$('#loginIdCheckBtn').on('click', function() {
-				$('#idCheckLength').addClass('d-none');
-				$('#idCheckDuplicated').addClass('d-none');
-				$('#idCheckOk').addClass('d-none');
-				let loginId = $('input[name=userId]').val().trim();
-				if (loginId.length < 4) {
-					$('#idCheckLength').removeClass('d-none');
-					return;
-				}
-				
-				$.ajax({
-					// request
-					url:"/user/is_duplicated_id"
-					, data:{"loginId":loginId}
-					
-					// response
-					, success:function(data) {
-						// 성공
-						if (data.result) {
-							// 중복
-							$('#idCheckDuplicated').removeClass('d-none');
-						} else {
-							// 사용 가능
-							$('#idCheckOk').removeClass('d-none');
-						}
-					}
-					, error:function(e) {
-						alert("중복확인에 실패했습니다.");
-					}
-				});
-			});
+	// 이번에는 서브밋 대신 일반 버튼 클릭으로 해본다.
+	$('#signUpBtn').on('click', function(e) {
+		e.preventDefault(); // 클릭 이벤트의 기본 동작을 중단
+		
+		// validation
+		var loginId = $('input[name=loginId]').val().trim();
+		if (loginId == '') {
+			alert("아이디를 입력하세요.");
+			return;
+		}
+		
+		var password = $('input[name=password]').val().trim();
+		var confirmPassword = $('input[name=confirmPassword]').val().trim();
+		if (password == '' || confirmPassword == '') {
+			alert("비밀번호를 입력하세요.");
+			return;
+		}
+		
+		// 비밀번호 확인 일치 여부
+		if (password != confirmPassword) {
+			alert("비밀번호가 일치하지 않습니다. 다시 입력하세요.");
+			// 텍스트박스의 값을 초기화 한다.
+			$('#password').val('');
+			$('#confirmPassword').val('');
+			return;
+		}
+		
+		var name = $('input[name=name]').val().trim();
+		if (name == '') {
+			alert("이름을 입력하세요.");
+			return;
+		}
+		var email = $('input[name=email]').val().trim();
+		if (email == '') {
+			alert("이메일 주소를 입력하세요.");
+			return;
+		}
+		
+		// 아이디 중복확인이 완료되었는지 확인
+		//-- idCheckOk <div>의 클래스에 d-none이 없으면 사용가능으로 본다.
+		if ($('#idCheckOk').hasClass('d-none') == true) {
+			alert("아이디 확인을 다시 해주세요.");
+			return;
+		}
+		
+		
+		// submit
+		// 1. ajax로 서브밋
+		// 2. non ajax 서브밋
+		
+		// 1) ajax
+		var url = $('#signUpForm').attr("action");     // form에 있는 action 주소를 가져온다
+		var params = $('#signUpForm').serialize(); // 폼태그 한번에 보낼 수 있게 구성한다.(이걸 사용하지 않으면 data에 json을 직접 만들어야 함)
+		
+		$.post(url, params)
+		.done(function(data) {
+			if (data.result == "success") {
+				alert("가입을 환영합니다!!! 로그인을 해주세요.");				
+				location.href="/user/sign_in_view";
+			} else {
+				alert("가입에 실패했습니다. 다시 시도해주세요.");
+			}
+		}); 
+	});
+});
+</script>
+
+<!-- <script>
+	$(document).ready(function() {
+		$('#loginIdCheckBtn').on('click', function() {
+			$('#idCheckLength').addClass('d-none');
+			$('#idCheckDuplicated').addClass('d-none');
+			$('#idCheckOk').addClass('d-none');
+			let loginId = $('input[name=userId]').val().trim();
+			if (loginId.length < 4) {
+				$('#idCheckLength').removeClass('d-none');
+				return;
+			}
 			
-			$('#signUpForm').on('submit', function() {
-				let loginId = $('input[name=userId]').val().trim();
-				let password = $('input[name=password]').val().trim();
-				let passwordCheck = $('input[name=passwordCheck]').val().trim();
-				let email = $('input[name=email]').val().trim();
-				let name = $('input[name=name]').val().trim();
+			$.ajax({
+				// request
+				url:"/user/is_duplicated_id"
+				, data:{"loginId":loginId}
 				
-				if (loginId.length < 1) {
-					alert("아이디를 입력하세요.");
-					return false;
-				}
-				if (password.length < 1) {
-					alert("비밀번호를 입력하세요.");
-					return false;
-				}
-				if (password != passwordCheck) {
-					alert("비밀번호가 일치하지 않습니다.");
-					return false;
-				}
-				if (name.length < 1) {
-					alert("이름을 입력하세요.");
-					return false;
-				}
-				if (email.length < 1) {
-					alert("이메일 주소를 입력하세요.");
-					return false;
-				}
-				
-				// 아이디 중복확인 완료 됐는지 확인 -> idCheckOk d-none을 가지고 있으면 확인하라는 얼럿 띄워야함
-				if ($('#idCheckOk').hasClass('d-none')) {
-					alert("아이디 중복확인을 다시 해주세요.");
-					return false;
-				}
-				
-				let url = $(this).attr('action');
-				let params = $(this).serialize(); // form태그에 있는 name으로 파라미터들 구성
-				
-				$.post(url, params)
-				.done(function(data) {
-					if (data.code == 1) {
-						alert("가입을 환영합니다! 로그인해주세요.")
-						location.href = "/user/sign_in_view";
+				// response
+				, success:function(data) {
+					// 성공
+					if (data.result) {
+						// 중복
+						$('#idCheckDuplicated').removeClass('d-none');
 					} else {
-						alert(data.errorMessage);
+						// 사용 가능
+						$('#idCheckOk').removeClass('d-none');
 					}
-				});
+				}
+				, error:function(e) {
+					alert("중복확인에 실패했습니다.");
+				}
 			});
 		});
-	</script>
-</body>
-</html>
+		
+		$('#signUpForm').on('submit', function() {
+			let loginId = $('input[name=userId]').val().trim();
+			let password = $('input[name=password]').val().trim();
+			let passwordCheck = $('input[name=passwordCheck]').val().trim();
+			let email = $('input[name=email]').val().trim();
+			let name = $('input[name=name]').val().trim();
+			
+			if (loginId.length < 1) {
+				alert("아이디를 입력하세요.");
+				return false;
+			}
+			if (password.length < 1) {
+				alert("비밀번호를 입력하세요.");
+				return false;
+			}
+			if (password != passwordCheck) {
+				alert("비밀번호가 일치하지 않습니다.");
+				return false;
+			}
+			if (name.length < 1) {
+				alert("이름을 입력하세요.");
+				return false;
+			}
+			if (email.length < 1) {
+				alert("이메일 주소를 입력하세요.");
+				return false;
+			}
+			
+			// 아이디 중복확인 완료 됐는지 확인 -> idCheckOk d-none을 가지고 있으면 확인하라는 얼럿 띄워야함
+			if ($('#idCheckOk').hasClass('d-none')) {
+				alert("아이디 중복확인을 다시 해주세요.");
+				return false;
+			}
+			
+			let url = $(this).attr('action');
+			let params = $(this).serialize(); // form태그에 있는 name으로 파라미터들 구성
+			
+			$.post(url, params)
+			.done(function(data) {
+				if (data.code == 1) {
+					alert("가입을 환영합니다! 로그인해주세요.")
+					location.href = "/user/sign_in_view";
+				} else {
+					alert(data.errorMessage);
+				}
+			});
+		});
+	});
+</script> -->

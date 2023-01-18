@@ -6,4 +6,20 @@
 	<select id="selectPostList" resultType="map">
 		select * from `post`
 	</select>
+	
+	<insert id="insertPost" parameterType="map">
+		INSERT INTO `post`
+		(
+			`content`
+			, `imagePath`
+			, `createdAt`
+			, `updatedAt`
+		)
+		VALUES
+		(
+			#{writeTextArea}
+			, #{file}
+			, NOW()
+			, NOW()
+	</insert>
 </mapper>
