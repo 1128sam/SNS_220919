@@ -3,23 +3,57 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.sns.post.dao.PostDAO">
-	<select id="selectPostList" resultType="map">
+	<!-- <select id="selectPostList" resultType="map">
 		select * from `post`
-	</select>
+	</select> -->
 	
 	<insert id="insertPost" parameterType="map">
 		INSERT INTO `post`
 		(
-			`content`
+			, `userId`
+			, `content`
 			, `imagePath`
 			, `createdAt`
 			, `updatedAt`
 		)
 		VALUES
 		(
-			#{writeTextArea}
-			, #{file}
+			#{userId}
+			, #{content}
+			, #{imagePath}
 			, NOW()
 			, NOW()
+	</insert>
+	
+	<select id="selectPostList" resultType="com.sns.post.model.Post">
+		SELECT
+			`id`
+			, `userId`
+			, `content`
+			, `imagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`post`
+		ORDER BY `id` DESC
+	</select>
+	
+	<insert id="insertComment" parameterType="int">
+		INSERT INTO `comment`
+		(
+			`postId`
+			, `userId`
+			, `content`
+			, `createdAt`
+			, `updatedAt`
+		)
+		VALUES
+		(
+			#{postId}
+			, #{userId}
+			, #{content}
+			, NOW()
+			, NOW()
+		)
 	</insert>
 </mapper>
