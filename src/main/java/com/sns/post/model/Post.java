@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Post {
 	private int id;
-	private String userId;
+	private int userId;
 	private String content;
 	private String imagePath;
 	private Date createdAt;
@@ -18,11 +18,11 @@ public class Post {
 		this.id = id;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 

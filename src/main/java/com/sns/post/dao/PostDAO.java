@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sns.post.model.Post;
+import com.sns.timeline.model.CardView;
 
 @Repository
 public interface PostDAO {
@@ -19,4 +20,6 @@ public interface PostDAO {
 	public List<Post> selectPostList();
 	
 	public int insertComment(@Param("userId") int userId, @Param("postId") int postId, @Param("content") String content);
+	
+	public List<CardView> generateCardViewList(List<CardView> cardViewList);
 }

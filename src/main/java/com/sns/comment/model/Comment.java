@@ -2,10 +2,11 @@ package com.sns.comment.model;
 
 import java.sql.Date;
 
+// Entity : 테이블에서 바로 가져온 값(가공되지 않음)
 public class Comment {
 	private int id;
-	private String postId;
-	private String userId;
+	private int postId;
+	private int userId;
 	private String content;
 	private Date createdAt;
 	private Date updatedAt;
@@ -18,19 +19,19 @@ public class Comment {
 		this.id = id;
 	}
 
-	public String getPostId() {
+	public int getPostId() {
 		return postId;
 	}
 
-	public void setPostId(String postId) {
+	public void setPostId(int postId) {
 		this.postId = postId;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 

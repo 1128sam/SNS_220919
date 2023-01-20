@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sns.common.FileManagerService;
 import com.sns.post.dao.PostDAO;
 import com.sns.post.model.Post;
+import com.sns.timeline.model.CardView;
 
 @Service
 public class PostBO {
@@ -34,4 +35,9 @@ public class PostBO {
 	public int addComment(int userId, int postId, String content) {
 		return postDAO.insertComment(userId, postId, content);
 	}
+	
+	/*
+	 * public List<CardView> generateCardViewList(List<CardView> cardViewList) {
+	 * return postDAO.generateCardViewList(cardViewList); }
+	 */
 }

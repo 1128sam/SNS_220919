@@ -3,11 +3,41 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.sns.comment.dao.CommentDAO">
- 	<select id="selectCommentList" resultType="com.sns.comment.model.Comment">
+ 	<!-- <select id="selectCommentList" resultType="com.sns.comment.model.Comment">
  		SELECT
  			
  		FROM
  			`comment`
  		WHERE
+ 	</select> -->
+ 	
+ 	<select id="selectCommentListByPostId" parameterType="int" resultType="com.sns.comment.model.Comment">
+ 		SELECT
+ 			`id`
+			, `postId`
+			, `userId`
+			, `content`
+			, `createdAt`
+			, `updatedAt`
+ 		FROM
+ 			`comment`
+ 		WHERE
+ 			`postId` = #{postId}
+ 	</select>
+ 	
+ 	<select id="generateCommentViewListByPostId" parameterType="int" resultType="com.sns.comment.model.CommentView">
+ 		SELECT
+ 			`id`
+			, `postId`
+			, `userId`
+			, `content`
+			, `createdAt`
+			, `updatedAt`
+ 		FROM
+ 			`comment`
+ 		WHERE
+ 			`postId` = #{postId}
+ 		ORDER BY
+ 			`createdAt`
  	</select>
  </mapper>
