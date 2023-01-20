@@ -27,6 +27,7 @@ public class CommentRestController {
 			HttpSession session
 			) {
 		Map <String, Object> result = new HashMap<>();
+
 		Integer userId = (Integer) session.getAttribute("userId");
 		if (userId == null) {
 			result.put("code", 500); // 비로그인 상태
@@ -34,7 +35,6 @@ public class CommentRestController {
 			result.put("errorMessage", "로그인을 해주세요.");
 			return result;
 		}
-		
 		postBO.addComment(userId, postId, content);
 
 		result.put("code", 1);
