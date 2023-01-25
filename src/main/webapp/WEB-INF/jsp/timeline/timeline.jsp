@@ -48,12 +48,22 @@
 				
 				<%-- 좋아요 --%>
 				<div class="card-like m-3">
+				<!-- 좋아요가 되어있을 때 -->
+				<c:if test="${card.filledLike eq true}">
 					<a href="/like/${card.post.id}" class="like-btn">
 					<img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18" height="18" alt="empty heart">
-						좋아요 10개
+						좋아요 ${card.likeCount}개
 					</a>
+				</c:if>
+					<!-- 좋아요가 해제되어 있을 때 -->
+				<c:if test="${card.filledLike eq false}">
+					<a href="/like/${card.post.id}" class="like-btn">
+					<img src="https://www.iconninja.com/files/527/809/128/heart-icon.png" width="18" height="18" alt="filled heart">
+						좋아요 ${card.likeCount}개
+					</a>
+				</c:if>
 				</div>
-				
+
 				<%-- 글 --%>
 				<div class="card-post m-3">
 					<span class="font-weight-bold">${card.user.loginId}</span>
@@ -216,33 +226,30 @@
 		// 댓글 쓰기(게시)
 		$('.like-btn').on('click', function() {
 			// 글번호, 댓글 내용
+			e.preventDefault();
+			
+			let userId = $(this).data('user-id');
+			//alert(userId);
+			if (userId == '') {
+				alert("로그인을 해주세요");
+				return;
+			}
+			
 			let postId = $(this).data('post-id');
-			alert(postId);
-			// 지금 클릭된 게시버튼의 형제인 input 태그를 가져온다. siblings
-			let comment = $(this).siblings('input').val().trim();
-
-			/* let formData = new FormData();
-			formData.append("comment", comment); */
-
-			/* $.ajax({
-				type: "get"
-				, url: "/like/create"
-				, data: {"postId":postId, "comment":comment}
-
-				, success: function(data) {
+			//alert(postId);
+			$.ajax({
+				url:"/like/" + postId
+				, success:function(data) {
 					if (data.code == 1) {
-						location.reload();
-						alert("댓글이 저장되었습니다.");
-					} else if (data.code == 500) { // 비로그인 일 때
-						location.href = "/user/sign_in_view";
+						location.reload(true);
 					} else {
-						alert(data.errorMessage);
+						alert(data.errorMessage);	
 					}
 				}
 				, error: function(e) {
-					alert("댓글 저장에 실패했습니다.");
+					alert("좋아요/해제 하는데 실패했습니다.");
 				}
-			});  // --- ajax 끝 */
+			});
 		});
 	});
 </script>

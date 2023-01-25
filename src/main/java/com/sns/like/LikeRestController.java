@@ -29,7 +29,7 @@ public class LikeRestController {
 			result.put("errorMessage", "로그인을 해주세요.");
 			return result;
 		}
-		likeBO.addLike(userId, postId);
+		likeBO.likeToggle(postId, userId);
 
 		result.put("code", 1);
 		result.put("result", "성공");

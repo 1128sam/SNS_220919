@@ -13,6 +13,8 @@ import com.sns.post.model.Post;
 import com.sns.timeline.bo.TimeLineBO;
 import com.sns.timeline.model.CardView;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class TimelineController {
 	@Autowired
@@ -24,11 +26,11 @@ public class TimelineController {
 
 	// http://localhost:8080/timeline/timeline_view
 	@GetMapping("/timeline/timeline_view")
-	public String timelineView(Model model) {
-		List<Post> postList = postBO.getPostList();
+	public String timelineView(Model model, HttpSession session) {
+//		List<Post> postList = postBO.getPostList();
 //		model.addAttribute("postList", postList);
 
-		List<CardView> cardList = tlBO.generateCardList();
+		List<CardView> cardList = tlBO.generateCardList((Integer)session.getAttribute("userId"));
 		model.addAttribute("cardList", cardList);
 		model.addAttribute("viewName", "timeline/timeline");
 		return "template/layout";
