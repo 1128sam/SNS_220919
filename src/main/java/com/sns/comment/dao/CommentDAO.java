@@ -14,4 +14,6 @@ public interface CommentDAO {
 	public List<Comment> selectCommentListByPostId(int postId);
 	
 	public List<CommentView> generateCommentViewListByPostId(int postId);
+	
+	public int deleteCommentByPostId(int postId);
 }

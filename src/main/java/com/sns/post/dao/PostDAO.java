@@ -19,7 +19,11 @@ public interface PostDAO {
 	
 	public List<Post> selectPostList();
 	
+	public Post selectPostByPostIdUserId(@Param("postId") int postId, @Param("userId") int userId);
+	
 	public int insertComment(@Param("userId") int userId, @Param("postId") int postId, @Param("content") String content);
 	
 	public List<CardView> generateCardViewList(List<CardView> cardViewList);
+
+	public int deletePostByPostIdUserId(@Param("postId") int postId, @Param("userId") int userId); 
 }

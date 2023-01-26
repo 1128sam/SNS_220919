@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sns.post.bo.PostBO;
-import com.sns.post.model.Post;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -20,6 +20,14 @@ import jakarta.servlet.http.HttpSession;
 public class PostRestController {
 	@Autowired
 	private PostBO postBO;
+	
+	/**
+	 * 글쓰기 API
+	 * @param content
+	 * @param file
+	 * @param session
+	 * @return
+	 */
 
 	@PostMapping("/create")
 	public Map<String, Object> create(@RequestParam("content") String content, @RequestParam("file") MultipartFile file, HttpSession session) {
@@ -40,6 +48,22 @@ public class PostRestController {
 		result.put("code", 1);
 		result.put("result", "성공");
 
+		return result;
+	}
+	
+	@DeleteMapping("/delete")
+	public Map<String, Object> delete(@RequestParam("postId") int postId, HttpSession session) {
+		int userId = (Integer) session.getAttribute("userId");
+		Map<String, Object> result = new HashMap<>();
+		int rowCount = postBO.deletePostByPostIdUserId(postId, userId);
+		
+		if (rowCount > 0) {
+			result.put("code", 1);
+			result.put("result", "성공");
+		} else {
+			result.put("code", 500);
+			result.put("errorMessage", "게시물 삭제에 실패했습니다.");
+		}
 		return result;
 	}
 }
