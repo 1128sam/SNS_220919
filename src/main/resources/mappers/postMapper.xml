@@ -58,7 +58,7 @@
 		)
 	</insert>
 	
-	<select id="getPostByPostIdUserId" parameterType="map" resultType="com.sns.post.model.Post">
+	<select id="selectPostByPostIdUserId" parameterType="map" resultType="com.sns.post.model.Post">
 		SELECT
 			`id`
 			, `userId`
@@ -69,13 +69,13 @@
 		FROM
 			`post`
 		WHERE
-			`postId` = #{postId} AND `userId` = #{userId}
+			`id` = #{postId} AND `userId` = #{userId}
 	</select>
 
 	<delete id="deletePostByPostIdUserId" parameterType="map">
 		DELETE FROM `post`
 		WHERE 
-			`postId` = #{postId}
+			`id` = #{postId}
 			AND `userId` = #{userId}
 	</delete>
 </mapper>

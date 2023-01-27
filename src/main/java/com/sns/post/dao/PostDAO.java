@@ -25,5 +25,5 @@ public interface PostDAO {
 	
 	public List<CardView> generateCardViewList(List<CardView> cardViewList);
 
-	public int deletePostByPostIdUserId(@Param("postId") int postId, @Param("userId") int userId); 
+	public void deletePostByPostIdUserId(@Param("postId") int postId, @Param("userId") int userId); 
 }

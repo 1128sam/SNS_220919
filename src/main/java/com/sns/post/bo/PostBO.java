@@ -53,7 +53,7 @@ public class PostBO {
 	 * return postDAO.generateCardViewList(cardViewList); }
 	 */
 	
-	public int deletePostByPostIdUserId(int postId, int userId) {
+	public void deletePostByPostIdUserId(int postId, int userId) {
 		// 기존 글 가져오기
 		Post post = getPostByPostIdUserId(postId, userId);
 		if (post == null) {
@@ -66,21 +66,12 @@ public class PostBO {
 		}
 
 		// 글 삭제
-		int postDel = postDAO.deletePostByPostIdUserId(postId, userId);
-		if (postDel < 1) {
-			return 0;
-		}
+		postDAO.deletePostByPostIdUserId(postId, userId);
 
 		// 댓글들 삭제
-		int commentDel = commentBO.deleteCommentByPostId(postId);
-		if (commentDel < 1) {
-			return 0;
-		}
+		commentBO.deleteCommentByPostId(postId);
+
 		// 좋아요들 삭제
-		int likeDel = likeBO.deleteLikeByPostId(postId);
-		if (likeDel < 1) {
-			return 0;
-		}
-		return 1;
+		likeBO.deleteLikeByPostId(postId);
 	}
 }

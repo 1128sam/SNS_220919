@@ -55,15 +55,11 @@ public class PostRestController {
 	public Map<String, Object> delete(@RequestParam("postId") int postId, HttpSession session) {
 		int userId = (Integer) session.getAttribute("userId");
 		Map<String, Object> result = new HashMap<>();
-		int rowCount = postBO.deletePostByPostIdUserId(postId, userId);
-		
-		if (rowCount > 0) {
-			result.put("code", 1);
-			result.put("result", "성공");
-		} else {
-			result.put("code", 500);
-			result.put("errorMessage", "게시물 삭제에 실패했습니다.");
-		}
+
+		postBO.deletePostByPostIdUserId(postId, userId);
+		result.put("code", 1);
+		result.put("result", "성공");
+
 		return result;
 	}
 }
